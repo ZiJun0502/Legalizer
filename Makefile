@@ -1,5 +1,6 @@
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall -Wno-unused-variable -Wno-unused-parameter -O0 -MMD -MP
+CXXFLAGS = -std=c++11 -Wall -Wno-unused-variable -Wno-unused-parameter -Ofast -MMD -MP -I/usr/include/boost -g
+# LDFLAGS = -lboost_system -lboost_filesystem
 
 # Folders
 SRCDIR = src
@@ -17,7 +18,7 @@ all: $(TARGET)
 
 # Link all object files to create the final binary
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS) -lboost_system -lboost_filesystem
+	$(CXX) -o $(TARGET) $(OBJS) 
 
 # Compile each .cpp file to the corresponding .o file in the build/ directory
 $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp

@@ -8,16 +8,19 @@ class Legalizer {
 public:
     struct outputInfo;
     std::vector<Cell> cells;
+    std::vector<BankingCell> banking_cells;
     std::vector<outputInfo> outputInfos;
     std::unordered_map<std::string, Cell*> cell_ref;
     Placement placement;
+    size_t num_cell_in_placement;
 
     Legalizer();
     Legalizer(const std::vector<PlacementRow>& placement_rows_input,
-              const std::vector<Cell>& cells_input);
+              const std::vector<Cell>& cells_input,
+              const std::vector<BankingCell>& banking_cells);
     ~Legalizer();
 
-    void legalize(std::vector<BankingCell>& banking_cells);
+    bool legalize();
 
     void insertCellToPlacement(Cell& cell, std::pair<size_t, size_t> rows, std::pair<size_t, size_t> cols);
     // std::pair<int, int> findPlacement(const Cell& cell) const; 
@@ -27,7 +30,7 @@ public:
     bool isValidPosition(size_t row, size_t col, const Cell& merged_cell);
     size_t manhattanDistance(size_t row1, size_t col1, size_t row2, size_t col2);
     void writeOutputFile();
-    void writeDrawFile();
+    void writeDrawFile(std::string draw_filename);
 
     // this class is used to store output
     struct outputInfo {

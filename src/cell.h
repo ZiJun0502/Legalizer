@@ -12,6 +12,7 @@ public:
     bool isPlaced;
 
     // Regular constructor
+    Cell() {}
     Cell(const std::string& n, double x_, double y_, double w, double h, bool fix, bool isPlaced = false)
         : name(n), x(x_), y(y_), width(w), height(h), isFixed(fix), isPlaced(false) {}
 
@@ -36,6 +37,8 @@ public:
     BankingCell(const std::vector<std::string>& src, const std::string& merged,
                 double x_, double y_, double w, double h, bool fix)
         : Cell(merged, x_, y_, w, h, fix), source_cell_names(src) {}
+    BankingCell(const BankingCell& other)
+        : Cell(other), source_cell_names(other.source_cell_names) {}
     // Overload the << operator for BankingCell
     friend std::ostream& operator<<(std::ostream& os, const BankingCell& banking_cell) {
         os << "Source Cells: ";

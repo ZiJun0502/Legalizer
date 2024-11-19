@@ -1,0 +1,48 @@
+#ifndef TETRIS_LEGALIZER_H
+#define TETRIS_LEGALIZER_H
+
+#include "globals.h"
+#include "placement.h"
+
+class TetrisLegalizer {
+public:
+    struct outputInfo;
+    std::set<std::string> cell_to_insert;
+    std::vector<Cell> cells;
+    std::vector<outputInfo> outputInfos;
+    std::unordered_map<std::string, Cell*> cell_ref;
+    Placement placement;
+
+    TetrisLegalizer();
+    TetrisLegalizer(const std::vector<PlacementRow>& placement_rows_input,
+              const std::vector<Cell>& cells_input);
+    ~TetrisLegalizer();
+
+    bool legalize(std::vector<BankingCell> banking_cells);
+
+    void insertCellToPlacement(Cell& cell, std::pair<size_t, size_t> rows, std::pair<size_t, size_t> cols);
+    // std::pair<int, int> findPlacement(const Cell& cell) const; 
+    void removeCellFromPlacement(Cell& cell);
+
+    std::pair<size_t, size_t> findValidPosition(const std::pair<size_t, size_t>& desired_position, const Cell& merged_cell);
+    bool isValidPosition(size_t row, size_t col, const Cell& merged_cell);
+    size_t manhattanDistance(size_t row1, size_t col1, size_t row2, size_t col2);
+    void writeOutputFile();
+    void writeDrawFile(std::string draw_filename);
+
+    // this class is used to store output
+    struct outputInfo {
+        double x, y;
+        size_t num_moved_cell;
+        std::vector<std::string> moved_cell_name;
+        std::vector<std::pair<double, double>> moved_cell_coord;
+        outputInfo() {}
+        outputInfo(std::pair<double, double> coord) {
+            x = coord.first, y = coord.second;
+            num_moved_cell = 0;
+        }
+    };
+};
+
+
+#endif

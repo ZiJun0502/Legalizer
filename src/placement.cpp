@@ -36,7 +36,7 @@ std::pair<size_t, size_t> Placement::getCellCols(const Cell& cell) {
     return getXCols(cell.x, cell.width);
 }
 std::pair<size_t, size_t> Placement::getYRows(double y, double height) {
-    size_t row_end = (y + height - this->start_y) / this->site_height;
+    size_t row_end = std::ceil((y + height - this->start_y) / this->site_height);
     size_t row_start = (y - this->start_y) / this->site_height;
     return std::make_pair(row_start, row_end);
 }
