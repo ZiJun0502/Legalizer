@@ -13,7 +13,7 @@ public:
 
     // Regular constructor
     Cell(const std::string& n, double x_, double y_, double w, double h, bool fix, bool isPlaced = false)
-        : name(n), x(x_), y(y_), width(w), height(h), isFixed(fix), isPlaced(isPlaced) {}
+        : name(n), x(x_), y(y_), width(w), height(h), isFixed(fix), isPlaced(false) {}
 
     // Copy constructor
     Cell(const Cell& other)

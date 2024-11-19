@@ -1,0 +1,3 @@
+#!/bin/bash
+# make clean
+./Optimizer-and-Legalizer-Co-optimization/Evaluator ./Optimizer-and-Legalizer-Co-optimization/testcase/testcase1_16900.lg ./Optimizer-and-Legalizer-Co-optimization/testcase/testcase1_16900.opt testcase1_16900_post.lg
