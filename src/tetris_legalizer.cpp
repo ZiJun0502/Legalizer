@@ -108,7 +108,12 @@ std::pair<size_t, size_t> TetrisLegalizer::findValidPosition(const std::pair<siz
         PlacementRow& placement_row = this->placement.placement_rows[row];
         auto first_pos = *placement_row.free_intervals.begin();
         if (isValidPosition(row, first_pos.lower(), cell)) {
-            min_distance = std::min(min_distance, manhattanDistance(row, first_pos.lower(), desired_row, desired_col));
+            size_t distance = manhattanDistance(row, first_pos.lower(), desired_row, desired_col);
+            if (distance < min_distance) {
+                min_distance = distance;
+                best_row = row;
+                best_col = first_pos.lower();
+            }
         }
     }
     return {best_row, best_col};

@@ -8,6 +8,8 @@ public:
     std::string name;
     double x, y; // Positions
     double width, height; // Dimensions
+    size_t site_width, site_height;
+    std::pair<size_t, size_t> rows, cols;
     bool isFixed;
     bool isPlaced;
 
