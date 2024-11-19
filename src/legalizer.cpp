@@ -34,14 +34,10 @@ Legalizer::~Legalizer() {
 // Removes a cell from the placement (freeing the space it occupied)
 void Legalizer::removeCellFromPlacement(Cell& cell) {
     assert(cell.isPlaced && "Removing a cell that is not placed");
-    // std::cout << cell << '\n';
+
     this->placement.remove(cell.rows, cell.cols);
     cell.isPlaced = false;
 }
-
-// Finds the nearest available space for a cell to be placed
-// std::pair<int, int> Legalizer::findPlacement(const Cell& cell) const {
-// }
 
 // Places the cell at the corresponding sites based on its x and y coordinates.
 void Legalizer::insertCellToPlacement(Cell& cell, std::pair<size_t, size_t> rows, std::pair<size_t, size_t> cols) {
@@ -68,15 +64,15 @@ bool Legalizer::legalize() {
         for (std::string& source_cell_name : banking_cell.source_cell_names) {
             Cell& source_cell = *cell_ref[source_cell_name];
             removeCellFromPlacement(source_cell);
-            // this->placement.remove(this->placement.getCellRows(source_cell), this->placement.getCellCols(source_cell));
         }
-        // site coordinate
+        // std::pair<size_t, size_t> target_pos = std::make_pair(target_rows.first, target_cols.first);
         banking_cell.site_height = this->placement.getCellSiteHeight(banking_cell);
         banking_cell.site_width = this->placement.getCellSiteWidth(banking_cell);
-        std::pair<size_t, size_t> desire_pos = this->placement.siteIndFromCoord(banking_cell.x, banking_cell.y);
+        // site coordinate
+        // the desired rows/cols coordinates
+        std::pair<size_t, size_t> desired_pos = this->placement.siteIndFromCoord(banking_cell.x, banking_cell.y);
         // valid_positoin: [row, col] site in placement
-        std::pair<size_t, size_t> valid_position = findValidPosition(desire_pos, banking_cell);
-
+        std::pair<size_t, size_t> valid_position = findValidPosition(desired_pos, banking_cell);
         // unable to find a valid position
         if (valid_position.first == std::numeric_limits<size_t>::max()) {
             this->writeDrawFile("fail_draw.txt");
@@ -130,8 +126,7 @@ std::pair<size_t, size_t> Legalizer::__findValidPosition(const std::pair<size_t,
     size_t min_distance = std::numeric_limits<size_t>::max();
 
     long long k = row_end - row_start;
-    // std::vector<std::vector<Interval>> available_intervals(k);
-    // std::cout << row_start << ' ' << row_end << '\n';
+    
     for (long long row = row_start ; row < row_end ; row++) {
         if (available_intervals.count(row)) continue;
         available_intervals[row] = this->placement.placement_rows[row].filterIntervalsByWidth(num_col_occupied);
@@ -155,9 +150,8 @@ std::pair<size_t, size_t> Legalizer::__findValidPosition(const std::pair<size_t,
                     if (intersects(int1, int2) && 
                         widthIsLargerOrEq(temp = intersect(int1, int2), num_col_occupied) && 
                         isOnSite(this->placement.placement_rows[row_start + row + offset], temp)) {
+
                         // Intervals intersect or touch
-                        // std::cout << "Intersect width: " << temp.upper() - temp.lower() << '\n';
-                        // std::cout << "Required width: " << num_col_occupied << '\n';
                         new_intersection.push_back(temp);
                     }
                 }
@@ -168,7 +162,7 @@ std::pair<size_t, size_t> Legalizer::__findValidPosition(const std::pair<size_t,
 
         // Check the intersection width and update the best position
         for (const auto& intv : intersection) {
-            size_t center_col = intv.lower(); // Simplification: Use lower bound as "position"
+            size_t center_col = intv.lower(); // Simplification: Use lower bound as "position" (left-packing)
             size_t center_row = row + row_start;
             size_t distance = manhattanDistance(center_row, center_col, desired_row, desired_col);
             if (distance < min_distance) {
@@ -187,10 +181,12 @@ std::pair<size_t, size_t> Legalizer::findValidPosition(const std::pair<size_t, s
     long long k = 5;
     long long row_start = std::max((long long) desired_row - k, 0LL);
     long long row_end   = std::min((long long) desired_row + k, (long long) this->placement.num_rows);
+
     std::unordered_set<long long> visited;
     std::unordered_map<long long, std::vector<Interval>> available_intervals;
+
+
     auto p = __findValidPosition(desired_position, banking_cell, row_start, row_end, visited, available_intervals);
-    // std::cout << "first solution: " << p << '\n';
     while(p.first == p.second) {
         row_start = std::max(row_start - k, 0LL);
         row_end   = std::min(row_end + k, (long long) this->placement.num_rows);
@@ -218,7 +214,7 @@ void Legalizer::writeOutputFile() {
 
 void Legalizer::writeDrawFile(std::string draw_filename) {
     std::ofstream draw_file(draw_filename);
-    draw_file << std::fixed << std::setprecision(6);
+    draw_file << std::fixed << std::setprecision(15);
     draw_file << "DieSize " << die_lower_left_x << ' ' << die_lower_left_y << ' ' << die_upper_right_x << ' ' << die_upper_right_y << '\n';
     for (Cell& cell : cells) {
         if (cell.isPlaced) {

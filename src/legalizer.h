@@ -26,12 +26,12 @@ public:
     // std::pair<int, int> findPlacement(const Cell& cell) const; 
     void removeCellFromPlacement(Cell& cell);
 
-std::pair<size_t, size_t> __findValidPosition(const std::pair<size_t, size_t>& desired_position,
-                                                         const Cell& banking_cell, 
-                                                         long long row_start, 
-                                                         long long row_end, 
-                                                         std::unordered_set<long long>& visited,
-                                                         std::unordered_map<long long, std::vector<Interval>>& available_intervals);
+    std::pair<size_t, size_t> __findValidPosition(const std::pair<size_t, size_t>& desired_position,
+                                                  const Cell& banking_cell, 
+                                                  long long row_start, 
+                                                  long long row_end, 
+                                                  std::unordered_set<long long>& visited,
+                                                  std::unordered_map<long long, std::vector<Interval>>& available_intervals);
     std::pair<size_t, size_t> findValidPosition(const std::pair<size_t, size_t>& desired_position, const Cell& merged_cell);
     bool isValidPosition(size_t row, size_t col, const Cell& merged_cell);
     size_t manhattanDistance(size_t row1, size_t col1, size_t row2, size_t col2);

@@ -21,6 +21,7 @@ public:
     // Copy constructor
     Cell(const Cell& other)
         : name(other.name), x(other.x), y(other.y), width(other.width), height(other.height),
+          site_width(other.site_width), site_height(other.site_height), rows(other.rows), cols(other.cols),
           isFixed(other.isFixed), isPlaced(other.isPlaced) {}
     // Overload the << operator
     friend std::ostream& operator<<(std::ostream& os, const Cell& cell) {
