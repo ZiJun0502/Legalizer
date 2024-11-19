@@ -20,7 +20,6 @@ void read_legalized_placement(char *filename) {
     }
 
     std::string line;
-    std::cout << "hello\n";
     while (std::getline(file, line)) {
         std::istringstream iss(line);
         std::string keyword;
